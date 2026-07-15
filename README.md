@@ -141,15 +141,39 @@ Admin@123
 
 # 📸 Screenshots
 
-Add screenshots here:
+## Admin Dashboard
 
-- Login Page
-- Admin Dashboard
-- Student Management
-- Add Student
-- Teacher Management
-- Add Teacher
+![Admin Dashboard](screenshots/admin-dashboard.png)
 
+---
+
+## Student Management
+
+![Students](screenshots/students.png)
+
+---
+
+## Add Student
+
+![Add Student](screenshots/add-student.png)
+
+---
+
+## Teacher Management
+
+![Teachers](screenshots/teachers.png)
+
+---
+
+## Add Teacher
+
+![Add Teacher](screenshots/add-teacher.png)
+
+---
+
+## Login Page
+
+![Login](screenshots/login.png)
 ---
 
 # 🎯 Future Improvements
