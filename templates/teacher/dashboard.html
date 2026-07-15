@@ -1,0 +1,128 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Teacher Dashboard | Cloud SMS{% endblock %}
+
+{% block body %}
+
+<div class="dashboard-layout">
+
+    {% include "layout/sidebar.html" %}
+
+    <main class="main-content">
+
+        {% include "layout/navbar.html" %}
+
+        <section class="dashboard-content">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="custom-alert alert-{{ category }}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="welcome-section">
+
+                <div>
+                    <span class="section-label">TEACHER PORTAL</span>
+                    <h2>Welcome, {{ current_user.name }}</h2>
+                    <p>View your assigned courses and student count.</p>
+                </div>
+
+            </div>
+
+            <div class="stats-grid">
+
+                <article class="stat-card">
+                    <div class="stat-icon courses-icon">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>Assigned Courses</span>
+                        <h3>{{ courses|length }}</h3>
+                        <small>Current course assignments</small>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon students-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>Total Students</span>
+                        <h3>{{ total_students }}</h3>
+                        <small>Students in assigned courses</small>
+                    </div>
+                </article>
+
+            </div>
+
+            <section class="dashboard-panel table-panel">
+
+                <div class="panel-header table-header">
+                    <div>
+                        <h3>My Courses</h3>
+                        <p>Courses currently assigned to you.</p>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="modern-table">
+
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for course in courses %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ course.course_code }}</strong>
+                                    </td>
+
+                                    <td>{{ course.course_name }}</td>
+                                </tr>
+
+                            {% else %}
+
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="empty-state">
+                                            <i class="bi bi-journal-x"></i>
+                                            <h4>No courses assigned</h4>
+                                            <p>
+                                                The administrator has not assigned
+                                                any courses yet.
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

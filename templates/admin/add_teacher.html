@@ -1,0 +1,157 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Add Teacher | Cloud SMS{% endblock %}
+
+{% block body %}
+
+<div class="dashboard-layout">
+
+    {% include "layout/sidebar.html" %}
+
+    <main class="main-content">
+
+        {% include "layout/navbar.html" %}
+
+        <section class="dashboard-content">
+
+            <div class="page-heading-row">
+
+                <div>
+                    <span class="section-label">FACULTY MANAGEMENT</span>
+                    <h2>Add New Teacher</h2>
+                    <p>Create a secure faculty account.</p>
+                </div>
+
+                <a href="{{ url_for('teachers') }}"
+                   class="secondary-button">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Teachers
+                </a>
+
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="custom-alert alert-{{ category }}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <section class="form-panel">
+
+                <div class="form-panel-header">
+
+                    <div class="form-panel-icon">
+                        <i class="bi bi-person-workspace"></i>
+                    </div>
+
+                    <div>
+                        <h3>Teacher Information</h3>
+                        <p>Enter the teacher’s account details.</p>
+                    </div>
+
+                </div>
+
+                <form method="POST" class="modern-form">
+
+                    <div class="form-grid">
+
+                        <div class="form-field">
+                            <label for="name">
+                                Full Name <span>*</span>
+                            </label>
+
+                            <div class="form-input-wrapper">
+                                <i class="bi bi-person"></i>
+
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    placeholder="Enter full name"
+                                    required
+                                    minlength="2"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="email">
+                                Email Address <span>*</span>
+                            </label>
+
+                            <div class="form-input-wrapper">
+                                <i class="bi bi-envelope"></i>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="teacher@example.com"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="password">
+                                Temporary Password <span>*</span>
+                            </label>
+
+                            <div class="form-input-wrapper">
+                                <i class="bi bi-lock"></i>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Minimum 8 characters"
+                                    required
+                                    minlength="8"
+                                >
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-notice">
+                        <i class="bi bi-shield-check"></i>
+
+                        <div>
+                            <strong>Secure teacher account</strong>
+                            <p>
+                                The teacher can sign in using this email and
+                                temporary password.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a href="{{ url_for('teachers') }}"
+                           class="cancel-button">
+                            Cancel
+                        </a>
+
+                        <button type="submit" class="submit-button">
+                            <i class="bi bi-person-check-fill"></i>
+                            Create Teacher
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

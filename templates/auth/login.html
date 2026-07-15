@@ -1,0 +1,147 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Login | Cloud SMS{% endblock %}
+
+{% block body %}
+
+<div class="login-page">
+
+    <div class="login-visual">
+
+        <div class="visual-overlay">
+
+            <div class="visual-brand">
+                <i class="bi bi-cloud-check-fill"></i>
+                <span>Cloud SMS</span>
+            </div>
+
+            <div class="visual-content">
+                <h1>Manage education smarter.</h1>
+
+                <p>
+                    A secure cloud-based platform for students, teachers,
+                    courses, attendance and academic performance.
+                </p>
+
+                <div class="visual-features">
+
+                    <div>
+                        <i class="bi bi-shield-check"></i>
+                        <span>Secure role-based access</span>
+                    </div>
+
+                    <div>
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span>Real-time academic analytics</span>
+                    </div>
+
+                    <div>
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <span>Cloud-ready architecture</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="login-form-section">
+
+        <div class="login-card">
+
+            <div class="mobile-brand">
+                <i class="bi bi-mortarboard-fill"></i>
+                <span>Cloud SMS</span>
+            </div>
+
+            <div class="login-header">
+                <span class="login-badge">Secure Portal</span>
+                <h2>Welcome back</h2>
+                <p>Enter your credentials to access your dashboard.</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="custom-alert alert-{{ category }}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+
+                <div class="input-group-custom">
+                    <label for="email">Email address</label>
+
+                    <div class="input-wrapper">
+                        <i class="bi bi-envelope"></i>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="admin@codsoft.com"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="password">Password</label>
+
+                    <div class="input-wrapper">
+                        <i class="bi bi-lock"></i>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                            autocomplete="current-password"
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="passwordToggle"
+                        >
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="primary-button">
+                    <span>Sign in</span>
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+
+            </form>
+
+            <div class="demo-account">
+
+                <div class="demo-title">
+                    <i class="bi bi-person-badge"></i>
+                    Demo administrator account
+                </div>
+
+                <div class="demo-credentials">
+                    <span>admin@codsoft.com</span>
+                    <span>Admin@123</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

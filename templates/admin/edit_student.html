@@ -1,0 +1,183 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Edit Student | Cloud SMS{% endblock %}
+
+{% block body %}
+
+<div class="dashboard-layout">
+
+    {% include "layout/sidebar.html" %}
+
+    <main class="main-content">
+
+        {% include "layout/navbar.html" %}
+
+        <section class="dashboard-content">
+
+            <div class="page-heading-row">
+
+                <div>
+                    <span class="section-label">STUDENT MANAGEMENT</span>
+                    <h2>Edit Student</h2>
+                    <p>Update account and academic information.</p>
+                </div>
+
+                <a href="{{ url_for('students') }}"
+                   class="secondary-button">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Students
+                </a>
+
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="custom-alert alert-{{ category }}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <section class="form-panel">
+
+                <div class="form-panel-header">
+
+                    <div class="form-panel-icon">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+
+                    <div>
+                        <h3>{{ student.user.name }}</h3>
+                        <p>{{ student.roll_number }}</p>
+                    </div>
+
+                </div>
+
+                <form method="POST" class="modern-form">
+
+                    <div class="form-grid">
+
+                        <div class="form-field">
+                            <label for="name">Full Name <span>*</span></label>
+                            <div class="form-input-wrapper">
+                                <i class="bi bi-person"></i>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    value="{{ student.user.name }}"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="email">Email Address <span>*</span></label>
+                            <div class="form-input-wrapper">
+                                <i class="bi bi-envelope"></i>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value="{{ student.user.email }}"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="roll_number">Roll Number <span>*</span></label>
+                            <div class="form-input-wrapper">
+                                <i class="bi bi-person-vcard"></i>
+                                <input
+                                    type="text"
+                                    id="roll_number"
+                                    name="roll_number"
+                                    value="{{ student.roll_number }}"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="department">Department <span>*</span></label>
+                            <div class="form-input-wrapper">
+                                <i class="bi bi-building"></i>
+                                <input
+                                    type="text"
+                                    id="department"
+                                    name="department"
+                                    value="{{ student.department }}"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="semester">Semester <span>*</span></label>
+                            <div class="form-input-wrapper">
+                                <i class="bi bi-calendar3"></i>
+
+                                <select
+                                    id="semester"
+                                    name="semester"
+                                    required
+                                >
+                                    {% for number in range(1, 9) %}
+                                        <option
+                                            value="{{ number }}"
+                                            {% if student.semester == number %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Semester {{ number }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="password">New Password</label>
+                            <div class="form-input-wrapper">
+                                <i class="bi bi-lock"></i>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Leave blank to keep current password"
+                                    minlength="8"
+                                >
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a href="{{ url_for('students') }}"
+                           class="cancel-button">
+                            Cancel
+                        </a>
+
+                        <button type="submit" class="submit-button">
+                            <i class="bi bi-check2-circle"></i>
+                            Save Changes
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

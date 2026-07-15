@@ -1,0 +1,361 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Students | Cloud SMS{% endblock %}
+
+{% block body %}
+
+<div class="dashboard-layout">
+
+    {% include "layout/sidebar.html" %}
+
+    <main class="main-content">
+
+        {% include "layout/navbar.html" %}
+
+        <section class="dashboard-content">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="custom-alert alert-{{ category }}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="page-heading-row">
+
+                <div>
+                    <span class="section-label">STUDENT MANAGEMENT</span>
+                    <h2>Students</h2>
+                    <p>Manage student accounts and academic profiles.</p>
+                </div>
+
+                <div class="page-actions">
+
+                    <a href="{{ url_for('export_students') }}"
+                       class="secondary-button">
+                        <i class="bi bi-download"></i>
+                        Export CSV
+                    </a>
+
+                    <a href="{{ url_for('add_student') }}"
+                       class="primary-action-button">
+                        <i class="bi bi-person-plus-fill"></i>
+                        Add Student
+                    </a>
+
+                </div>
+
+            </div>
+
+            <section class="management-summary">
+
+                <div class="summary-card">
+                    <div class="summary-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <div>
+                        <span>Displayed Students</span>
+                        <strong>{{ students|length }}</strong>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+
+                    <div>
+                        <span>Departments</span>
+                        <strong>{{ departments|length }}</strong>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-icon">
+                        <i class="bi bi-mortarboard"></i>
+                    </div>
+
+                    <div>
+                        <span>Active Semesters</span>
+                        <strong>8</strong>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="dashboard-panel student-management-panel">
+
+                <div class="management-toolbar">
+
+                    <form method="GET"
+                          action="{{ url_for('students') }}"
+                          class="student-filter-form">
+
+                        <div class="search-control">
+                            <i class="bi bi-search"></i>
+
+                            <input
+                                type="search"
+                                name="search"
+                                value="{{ search }}"
+                                placeholder="Search name, email or roll number"
+                            >
+                        </div>
+
+                        <select name="department" class="filter-select">
+                            <option value="">All departments</option>
+
+                            {% for department in departments %}
+                                <option
+                                    value="{{ department }}"
+                                    {% if selected_department == department %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ department }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <select name="semester" class="filter-select">
+                            <option value="">All semesters</option>
+
+                            {% for number in range(1, 9) %}
+                                <option
+                                    value="{{ number }}"
+                                    {% if selected_semester == number|string %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Semester {{ number }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <button type="submit" class="filter-button">
+                            <i class="bi bi-funnel-fill"></i>
+                            Apply
+                        </button>
+
+                        {% if search or selected_department or selected_semester %}
+                            <a href="{{ url_for('students') }}"
+                               class="clear-filter-button">
+                                Clear
+                            </a>
+                        {% endif %}
+
+                    </form>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="modern-table student-table">
+
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Roll Number</th>
+                                <th>Department</th>
+                                <th>Semester</th>
+                                <th>Account</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for student in students %}
+
+                                <tr>
+
+                                    <td>
+                                        <div class="student-cell">
+
+                                            <div class="table-avatar">
+                                                {{ student.user.name[0]|upper }}
+                                            </div>
+
+                                            <div>
+                                                <strong>
+                                                    {{ student.user.name }}
+                                                </strong>
+
+                                                <span>
+                                                    ID: STU-{{ "%04d"|format(student.id) }}
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <strong>{{ student.roll_number }}</strong>
+                                    </td>
+
+                                    <td>{{ student.department }}</td>
+
+                                    <td>
+                                        <span class="semester-badge">
+                                            Semester {{ student.semester }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <div class="account-cell">
+                                            <span>{{ student.user.email }}</span>
+
+                                            <small>
+                                                <i class="bi bi-check-circle-fill"></i>
+                                                Active
+                                            </small>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="table-actions">
+
+                                            <a
+                                                href="{{ url_for(
+                                                    'edit_student',
+                                                    student_id=student.id
+                                                ) }}"
+                                                class="action-button edit-action"
+                                                title="Edit student"
+                                            >
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+
+                                            <button
+                                                type="button"
+                                                class="action-button delete-action"
+                                                title="Delete student"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteStudentModal"
+                                                data-delete-url="{{ url_for(
+                                                    'delete_student',
+                                                    student_id=student.id
+                                                ) }}"
+                                                data-student-name="{{ student.user.name }}"
+                                            >
+                                                <i class="bi bi-trash3"></i>
+                                            </button>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+
+                            {% else %}
+
+                                <tr>
+                                    <td colspan="6">
+
+                                        <div class="empty-state">
+                                            <i class="bi bi-person-x"></i>
+
+                                            <h4>No students found</h4>
+
+                                            <p>
+                                                Change the search filters or add a new student.
+                                            </p>
+
+                                            <a
+                                                href="{{ url_for('add_student') }}"
+                                                class="primary-action-button"
+                                            >
+                                                <i class="bi bi-person-plus-fill"></i>
+                                                Add Student
+                                            </a>
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div
+    class="modal fade"
+    id="deleteStudentModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content delete-modal">
+            <div class="modal-body">
+
+                <div class="delete-modal-icon">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+
+                <h3>Delete student?</h3>
+
+                <p>
+                    You are about to delete
+                    <strong id="deleteStudentName">this student</strong>.
+                    This action cannot be undone.
+                </p>
+
+                <div class="delete-modal-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
+                    <form id="deleteStudentForm" method="POST">
+                        <button type="submit" class="danger-button">
+                            <i class="bi bi-trash3-fill"></i>
+                            Delete Student
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("deleteStudentModal");
+    const form = document.getElementById("deleteStudentForm");
+    const studentName = document.getElementById("deleteStudentName");
+
+    if (!modal || !form || !studentName) {
+        return;
+    }
+
+    modal.addEventListener("show.bs.modal", event => {
+        const button = event.relatedTarget;
+
+        form.action = button.dataset.deleteUrl;
+        studentName.textContent = button.dataset.studentName;
+    });
+});
+</script>
+
+{% endblock %}

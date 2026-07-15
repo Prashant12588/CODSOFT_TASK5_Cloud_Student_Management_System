@@ -1,0 +1,32 @@
+<header class="topbar">
+
+    <button class="menu-button" id="menuButton">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <div class="topbar-title">
+        <h1>{% block page_heading %}Dashboard{% endblock %}</h1>
+        <p>Cloud Student Management System</p>
+    </div>
+
+    <div class="topbar-actions">
+
+        <button class="icon-button">
+            <i class="bi bi-bell"></i>
+            <span class="notification-dot"></span>
+        </button>
+
+        <div class="user-profile">
+            <div class="profile-avatar">
+                {{ current_user.name[0]|upper }}
+            </div>
+
+            <div class="profile-details">
+                <strong>{{ current_user.name }}</strong>
+                <span>{{ current_user.role|title }}</span>
+            </div>
+        </div>
+
+    </div>
+
+</header>

@@ -1,0 +1,196 @@
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+        <div class="brand-icon">
+            <i class="bi bi-mortarboard-fill"></i>
+        </div>
+
+        <div>
+            <h2>Cloud SMS</h2>
+            <span>Management Portal</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        {% if current_user.role == "admin" %}
+
+            <a
+                href="{{ url_for('admin_dashboard') }}"
+                class="nav-link
+                {% if request.endpoint == 'admin_dashboard' %}
+                    active
+                {% endif %}"
+            >
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a
+                href="{{ url_for('students') }}"
+                class="nav-link
+                {% if request.endpoint in [
+                    'students',
+                    'add_student',
+                    'edit_student'
+                ] %}
+                    active
+                {% endif %}"
+            >
+                <i class="bi bi-people-fill"></i>
+                <span>Students</span>
+            </a>
+
+            <a
+                href="{{ url_for('teachers') }}"
+                class="nav-link
+                {% if request.endpoint in [
+                    'teachers',
+                    'add_teacher',
+                    'edit_teacher'
+                ] %}
+                    active
+                {% endif %}"
+            >
+                <i class="bi bi-person-workspace"></i>
+                <span>Teachers</span>
+            </a>
+
+            <a
+                href="#"
+                class="nav-link
+                {% if request.endpoint in [
+                    'courses',
+                    'add_course',
+                    'edit_course'
+                ] %}
+                    active
+                {% endif %}"
+            >
+                <i class="bi bi-journal-bookmark-fill"></i>
+                <span>Courses</span>
+            </a>
+
+            <a
+                href="#"
+                class="nav-link
+                {% if request.endpoint in [
+                    'attendance',
+                    'mark_attendance'
+                ] %}
+                    active
+                {% endif %}"
+            >
+                <i class="bi bi-calendar-check-fill"></i>
+                <span>Attendance</span>
+            </a>
+
+            <a
+                href="#"
+                class="nav-link
+                {% if request.endpoint in [
+                    'grades',
+                    'add_grade',
+                    'edit_grade'
+                ] %}
+                    active
+                {% endif %}"
+            >
+                <i class="bi bi-bar-chart-fill"></i>
+                <span>Grades</span>
+            </a>
+
+        {% elif current_user.role == "teacher" %}
+
+            <a
+                href="{{ url_for('teacher_dashboard') }}"
+                class="nav-link
+                {% if request.endpoint == 'teacher_dashboard' %}
+                    active
+                {% endif %}"
+            >
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class="bi bi-journal-bookmark-fill"></i>
+                <span>My Courses</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class="bi bi-people-fill"></i>
+                <span>Students</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class="bi bi-calendar-check-fill"></i>
+                <span>Attendance</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class="bi bi-bar-chart-fill"></i>
+                <span>Grades</span>
+            </a>
+
+        {% elif current_user.role == "student" %}
+
+            <a
+                href="{{ url_for('student_dashboard') }}"
+                class="nav-link
+                {% if request.endpoint == 'student_dashboard' %}
+                    active
+                {% endif %}"
+            >
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class="bi bi-journal-bookmark-fill"></i>
+                <span>My Courses</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class="bi bi-calendar-check-fill"></i>
+                <span>Attendance</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class="bi bi-award-fill"></i>
+                <span>Grades</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <i class="bi bi-person-circle"></i>
+                <span>Profile</span>
+            </a>
+
+        {% endif %}
+
+    </nav>
+
+    <div class="sidebar-footer">
+
+        <div class="sidebar-user">
+            <div class="sidebar-avatar">
+                {{ current_user.name[0]|upper }}
+            </div>
+
+            <div class="sidebar-user-info">
+                <strong>{{ current_user.name }}</strong>
+                <span>{{ current_user.role|title }}</span>
+            </div>
+        </div>
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="nav-link logout-link"
+        >
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Logout</span>
+        </a>
+
+    </div>
+
+</aside>

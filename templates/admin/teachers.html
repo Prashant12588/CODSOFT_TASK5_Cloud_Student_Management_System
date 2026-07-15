@@ -1,0 +1,335 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Teachers | Cloud SMS{% endblock %}
+
+{% block body %}
+
+<div class="dashboard-layout">
+
+    {% include "layout/sidebar.html" %}
+
+    <main class="main-content">
+
+        {% include "layout/navbar.html" %}
+
+        <section class="dashboard-content">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="custom-alert alert-{{ category }}">
+                            <i class="bi bi-info-circle-fill"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="page-heading-row">
+
+                <div>
+                    <span class="section-label">FACULTY MANAGEMENT</span>
+                    <h2>Teachers</h2>
+                    <p>Manage faculty accounts and assigned courses.</p>
+                </div>
+
+                <div class="page-actions">
+
+                    <a href="{{ url_for('export_teachers') }}"
+                       class="secondary-button">
+                        <i class="bi bi-download"></i>
+                        Export CSV
+                    </a>
+
+                    <a href="{{ url_for('add_teacher') }}"
+                       class="primary-action-button">
+                        <i class="bi bi-person-plus-fill"></i>
+                        Add Teacher
+                    </a>
+
+                </div>
+
+            </div>
+
+            <section class="management-summary">
+
+                <div class="summary-card">
+                    <div class="summary-icon">
+                        <i class="bi bi-person-workspace"></i>
+                    </div>
+
+                    <div>
+                        <span>Displayed Teachers</span>
+                        <strong>{{ teachers|length }}</strong>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-icon">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                    </div>
+
+                    <div>
+                        <span>Assigned Courses</span>
+
+                        <strong>
+                            {% set course_total = namespace(value=0) %}
+
+                            {% for teacher in teachers %}
+                                {% set course_total.value =
+                                    course_total.value
+                                    + teacher.assigned_courses|length %}
+                            {% endfor %}
+
+                            {{ course_total.value }}
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+
+                    <div>
+                        <span>Account Status</span>
+                        <strong>Active</strong>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="dashboard-panel student-management-panel">
+
+                <div class="management-toolbar">
+
+                    <form method="GET"
+                          action="{{ url_for('teachers') }}"
+                          class="student-filter-form">
+
+                        <div class="search-control">
+                            <i class="bi bi-search"></i>
+
+                            <input
+                                type="search"
+                                name="search"
+                                value="{{ search }}"
+                                placeholder="Search teacher name or email"
+                            >
+                        </div>
+
+                        <button type="submit" class="filter-button">
+                            <i class="bi bi-search"></i>
+                            Search
+                        </button>
+
+                        {% if search %}
+                            <a href="{{ url_for('teachers') }}"
+                               class="clear-filter-button">
+                                Clear
+                            </a>
+                        {% endif %}
+
+                    </form>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="modern-table student-table">
+
+                        <thead>
+                            <tr>
+                                <th>Teacher</th>
+                                <th>Teacher ID</th>
+                                <th>Email</th>
+                                <th>Assigned Courses</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for teacher in teachers %}
+
+                                <tr>
+
+                                    <td>
+                                        <div class="student-cell">
+
+                                            <div class="table-avatar">
+                                                {{ teacher.name[0]|upper }}
+                                            </div>
+
+                                            <div>
+                                                <strong>{{ teacher.name }}</strong>
+                                                <span>Faculty Member</span>
+                                            </div>
+
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            TCH-{{ "%04d"|format(teacher.id) }}
+                                        </strong>
+                                    </td>
+
+                                    <td>{{ teacher.email }}</td>
+
+                                    <td>
+                                        <span class="semester-badge">
+                                            {{ teacher.assigned_courses|length }}
+                                            Courses
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <div class="account-cell">
+                                            <small>
+                                                <i class="bi bi-check-circle-fill"></i>
+                                                Active
+                                            </small>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="table-actions">
+
+                                            <a
+                                                href="{{ url_for(
+                                                    'edit_teacher',
+                                                    teacher_id=teacher.id
+                                                ) }}"
+                                                class="action-button edit-action"
+                                                title="Edit teacher"
+                                            >
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+
+                                            <button
+                                                type="button"
+                                                class="action-button delete-action"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteTeacherModal"
+                                                data-delete-url="{{ url_for(
+                                                    'delete_teacher',
+                                                    teacher_id=teacher.id
+                                                ) }}"
+                                                data-teacher-name="{{ teacher.name }}"
+                                            >
+                                                <i class="bi bi-trash3"></i>
+                                            </button>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+
+                            {% else %}
+
+                                <tr>
+                                    <td colspan="6">
+
+                                        <div class="empty-state">
+                                            <i class="bi bi-person-workspace"></i>
+                                            <h4>No teachers found</h4>
+                                            <p>Add the first teacher account.</p>
+
+                                            <a href="{{ url_for('add_teacher') }}"
+                                               class="primary-action-button">
+                                                <i class="bi bi-person-plus-fill"></i>
+                                                Add Teacher
+                                            </a>
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div
+    class="modal fade"
+    id="deleteTeacherModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content delete-modal">
+
+            <div class="modal-body">
+
+                <div class="delete-modal-icon">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+
+                <h3>Delete teacher?</h3>
+
+                <p>
+                    You are about to delete
+                    <strong id="deleteTeacherName">this teacher</strong>.
+                    Assigned courses will become unassigned.
+                </p>
+
+                <div class="delete-modal-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
+                    <form id="deleteTeacherForm" method="POST">
+                        <button type="submit" class="danger-button">
+                            <i class="bi bi-trash3-fill"></i>
+                            Delete Teacher
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("deleteTeacherModal");
+    const form = document.getElementById("deleteTeacherForm");
+    const teacherName = document.getElementById("deleteTeacherName");
+
+    if (!modal || !form || !teacherName) {
+        return;
+    }
+
+    modal.addEventListener("show.bs.modal", event => {
+        const button = event.relatedTarget;
+
+        form.action = button.dataset.deleteUrl;
+        teacherName.textContent = button.dataset.teacherName;
+    });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,257 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Admin Dashboard | Cloud SMS{% endblock %}
+
+{% block body %}
+
+<div class="dashboard-layout">
+
+    {% include "layout/sidebar.html" %}
+
+    <main class="main-content">
+
+        {% include "layout/navbar.html" %}
+
+        <section class="dashboard-content">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="custom-alert alert-{{ category }}">
+                            <i class="bi bi-check-circle-fill"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="welcome-section">
+
+                <div>
+                    <span class="section-label">ADMIN OVERVIEW</span>
+                    <h2>Welcome back, {{ current_user.name }}</h2>
+                    <p>Monitor students, teachers, courses and enrollments.</p>
+                </div>
+
+                <a href="{{ url_for('add_student') }}" class="primary-action-button">
+                    <i class="bi bi-person-plus-fill"></i>
+                    Add Student
+                </a>
+
+            </div>
+
+            <div class="stats-grid">
+
+                <article class="stat-card">
+                    <div class="stat-icon students-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>Total Students</span>
+                        <h3>{{ total_students }}</h3>
+                        <small>Registered students</small>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon teachers-icon">
+                        <i class="bi bi-person-workspace"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>Total Teachers</span>
+                        <h3>{{ total_teachers }}</h3>
+                        <small>Active faculty</small>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon courses-icon">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>Total Courses</span>
+                        <h3>{{ total_courses }}</h3>
+                        <small>Available courses</small>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon enrollments-icon">
+                        <i class="bi bi-check2-square"></i>
+                    </div>
+
+                    <div class="stat-content">
+                        <span>Enrollments</span>
+                        <h3>{{ total_enrollments }}</h3>
+                        <small>Course enrollments</small>
+                    </div>
+                </article>
+
+            </div>
+
+            <div class="dashboard-grid">
+
+                <section class="dashboard-panel chart-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Platform Overview</h3>
+                            <p>Current system distribution</p>
+                        </div>
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="overviewChart"></canvas>
+                    </div>
+
+                </section>
+
+                <section class="dashboard-panel quick-actions-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Quick Actions</h3>
+                            <p>Common administration tasks</p>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+
+                        <a href="{{ url_for('add_student') }}" class="quick-action">
+                            <div>
+                                <i class="bi bi-person-plus-fill"></i>
+                            </div>
+                            <span>Add Student</span>
+                        </a>
+
+                        <a href="#" class="quick-action">
+                            <div>
+                                <i class="bi bi-person-workspace"></i>
+                            </div>
+                            <span>Add Teacher</span>
+                        </a>
+
+                        <a href="#" class="quick-action">
+                            <div>
+                                <i class="bi bi-journal-plus"></i>
+                            </div>
+                            <span>Add Course</span>
+                        </a>
+
+                        <a href="#" class="quick-action">
+                            <div>
+                                <i class="bi bi-file-earmark-bar-graph"></i>
+                            </div>
+                            <span>View Reports</span>
+                        </a>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <section class="dashboard-panel table-panel">
+
+                <div class="panel-header table-header">
+
+                    <div>
+                        <h3>Recent Students</h3>
+                        <p>Latest registered student profiles</p>
+                    </div>
+
+                    <a href="#" class="secondary-button">
+                        View all
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="modern-table">
+
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Roll Number</th>
+                                <th>Department</th>
+                                <th>Semester</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for student in recent_students %}
+                                <tr>
+                                    <td>
+                                        <div class="student-cell">
+                                            <div class="table-avatar">
+                                                {{ student.user.name[0]|upper }}
+                                            </div>
+
+                                            <div>
+                                                <strong>{{ student.user.name }}</strong>
+                                                <span>{{ student.user.email }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>{{ student.roll_number }}</td>
+                                    <td>{{ student.department }}</td>
+
+                                    <td>
+                                        <span class="semester-badge">
+                                            Semester {{ student.semester }}
+                                        </span>
+                                    </td>
+                                </tr>
+
+                            {% else %}
+
+                                <tr>
+                                    <td colspan="4">
+
+                                        <div class="empty-state">
+                                            <i class="bi bi-people"></i>
+                                            <h4>No students found</h4>
+                                            <p>Add your first student to begin.</p>
+
+                                            <a href="{{ url_for('add_student') }}"
+                                               class="primary-action-button">
+                                                Add Student
+                                            </a>
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+window.dashboardData = {
+    students: {{ total_students }},
+    teachers: {{ total_teachers }},
+    courses: {{ total_courses }},
+    enrollments: {{ total_enrollments }}
+};
+</script>
+
+{% endblock %}
