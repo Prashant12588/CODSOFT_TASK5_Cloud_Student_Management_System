@@ -185,6 +185,11 @@ Admin@123
 - Report Generation
 
 ---
+## Live AWS Deployment
+
+The application is deployed on AWS EC2 using Gunicorn and Nginx.
+
+**Live URL:** http://13.233.132.248
 
 # 👨‍💻 Developer
 
