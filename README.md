@@ -185,6 +185,40 @@ Admin@123
 - Report Generation
 
 ---
+# ☁️ AWS Deployment
+
+The application has been deployed on AWS EC2 using:
+
+- Ubuntu Server
+- Gunicorn
+- Nginx
+- Flask
+- SQLite
+
+## Live URL
+
+http://13.233.132.248
+
+### AWS EC2 Instance
+
+![EC2](screenshots/aws-ec2-instance.png)
+
+### Live Login Page
+
+![AWS Login](screenshots/aws-live-login.png)
+
+### Admin Dashboard
+
+![Dashboard](screenshots/aws-dashboard.png)
+
+### Student Management
+
+![Students](screenshots/aws-students.png)
+
+### Teacher Management
+
+![Teachers](screenshots/aws-teachers.png)
+
 ## Live AWS Deployment
 
 The application is deployed on AWS EC2 using Gunicorn and Nginx.
